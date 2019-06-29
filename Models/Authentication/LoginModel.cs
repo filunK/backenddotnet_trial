@@ -1,4 +1,4 @@
-namespace FilunK.backenddotnet_trial.Models
+namespace FilunK.backenddotnet_trial.Models.Authentication
 {
     /// <summary>
     ///     ログインJSONのモデルクラス

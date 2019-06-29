@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Logging;
 
-using FilunK.backenddotnet_trial.Models;
+using FilunK.backenddotnet_trial.Models.Configure;
 
 namespace FilunK.backenddotnet_trial
 {
@@ -45,7 +45,7 @@ namespace FilunK.backenddotnet_trial
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = this.Configuration["Jwt:Issuer"],
                             ValidAudience = this.Configuration["Jwt:Issuer"],
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Jwt:Key"]))
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Jwt:TokenKey"]))
                         };
                     }
                 );

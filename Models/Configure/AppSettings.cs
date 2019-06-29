@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FilunK.backenddotnet_trial.Models
+namespace FilunK.backenddotnet_trial.Models.Configure
 {
     public class AppSettings
     {
@@ -29,7 +29,8 @@ namespace FilunK.backenddotnet_trial.Models
 
     public class Jwt
     {
-        public string Key{get; set;}
+        public string TokenKey{get; set;}
+        public string RefreshTokenKey{get; set;}
         public string Issuer{get; set;}
         
         public double ExpireMinutes{get; set;}

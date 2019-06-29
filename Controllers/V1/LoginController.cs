@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 using FilunK.backenddotnet_trial.Models;
+using FilunK.backenddotnet_trial.Models.Configure;
+using FilunK.backenddotnet_trial.Models.Authentication;
 
 namespace FilunK.backenddotnet_trial.Controllers
 {
@@ -31,7 +33,6 @@ namespace FilunK.backenddotnet_trial.Controllers
             this._config = configuration.Value;
         }
 
-        // POST api/values
         /// <summary>
         ///     ログイン
         /// </summary>
@@ -58,11 +59,36 @@ namespace FilunK.backenddotnet_trial.Controllers
             if (user != null)
             {
                 // JWT生成
-                var generatedToken = this.GenerateToken(user);
+                var generatedToken = this.GenerateToken(user, this._config.Jwt.TokenKey, SecurityAlgorithms.HmacSha256);
+                var refreshToken = this.GenerateRefreshToken(generatedToken, this._config.Jwt.RefreshTokenKey, SecurityAlgorithms.HmacSha512);
                 response = Ok(new {
-                    token = generatedToken
+                    token = generatedToken,
+                    refresh = refreshToken
                 });
             }
+
+            return response;
+        }
+
+        /// <summary>
+        ///     ログイン
+        /// </summary>
+        /// <remark>
+        ///     このAPIでは以下のJSONを<c>PUT</c>メソッドで受け取ります。
+        ///     <code>
+        ///         {
+        ///             accessToken: string
+        ///             refreshToken: string
+        ///          }
+        ///     </code>
+        ///     成功した場合、再生成したJWTを返却します。
+        /// </remark>
+        ///
+        [AllowAnonymous]
+        [HttpPut]
+        public IActionResult Put([FromBody] RefreshRequestModel model)
+        {
+            IActionResult response = Unauthorized();
 
             return response;
         }
@@ -86,10 +112,10 @@ namespace FilunK.backenddotnet_trial.Controllers
         /// <summary>
         ///     JWTを生成する
         /// </summary>
-        private string GenerateToken(UserModel user)
+        private string GenerateToken(UserModel user,string tokenString, string algorithm)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config.Jwt.Key));
-            var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenString));
+            var credential = new SigningCredentials(key, algorithm);
 
             var token = new JwtSecurityToken(
                 issuer: this._config.Jwt.Issuer,
@@ -107,6 +133,21 @@ namespace FilunK.backenddotnet_trial.Controllers
         }
 
 
+        private string GenerateRefreshToken(string jwt, string tokenString, string algorithm)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenString));
+            var credential = new SigningCredentials(key, algorithm);
 
+            var token = new JwtSecurityToken(
+                issuer: this._config.Jwt.Issuer,
+                audience: this._config.Jwt.Issuer,
+                claims: new[] {
+                    new Claim("token", jwt),
+                },
+                signingCredentials: credential
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }
