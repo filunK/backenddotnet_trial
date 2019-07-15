@@ -22,7 +22,7 @@ namespace FilunK.backenddotnet_trial.Controllers
 {
 
     /// <summary>
-    ///     ログインAPI
+    ///     認証系API
     /// </sumamry>
     [Route("api/v1/[controller]")]
     [ApiController]
