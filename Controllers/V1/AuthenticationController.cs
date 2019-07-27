@@ -62,25 +62,8 @@ namespace FilunK.backenddotnet_trial.Controllers
             if (user != null)
             {
                 // JWT生成
-                var generatedToken = TokenUtil.GenerateToken(
-                    this._config.Jwt.Issuer,
-                    this._config.Jwt.Issuer,
-                    this._config.Jwt.ExpireMinutes,
-                    user,
-                    this._config.Jwt.TokenKey, SecurityAlgorithms.HmacSha256
-                );
-                var refreshToken = TokenUtil.GenerateRefreshToken(
-                    this._config.Jwt.Issuer,
-                    this._config.Jwt.Issuer,
-                    generatedToken,
-                    this._config.Jwt.RefreshTokenKey,
-                    SecurityAlgorithms.HmacSha512
-                );
-                response = Ok(new
-                {
-                    token = generatedToken,
-                    refresh = refreshToken
-                });
+                var tokenSet = this.CreateTokenSet(user);
+                response = Ok(tokenSet);
             }
 
             return response;
@@ -103,8 +86,66 @@ namespace FilunK.backenddotnet_trial.Controllers
         }
 
 
+        /// <summary>
+        ///     リフレッシュトークン更新
+        /// </summary>
+        /// <remark>
+        ///     このAPIでは以下のJSONを<c>PUT</c>メソッドで受け取ります。
+        ///     <code>
+        ///         {
+        ///             refreshToken: string
+        ///          }
+        ///     </code>
+        ///     リフレッシュトークンのバリデーションに成功した場合、更新したJWTを返却します。
+        /// </remark>
+        ///
+        [Route("refresh")]
+        [AllowAnonymous]
+        [HttpPut]
+        public IActionResult Refresh([FromBody] RefreshRequestModel model)
+        {
+            IActionResult response = Unauthorized();
+
+            var user = this.ReAuthenticate(model.RefreshToken, out var isReAuthenticated);
+
+            if (isReAuthenticated && user != null)
+            {
+                // JWT生成
+                var tokenSet = this.CreateTokenSet(user);
+                response = Ok(tokenSet);
+
+            }
+
+            return response;
+        }
 
         #region 非HTTPメソッド
+
+        private TokenResponse CreateTokenSet(UserModel model)
+        {
+            // JWT生成
+            var generatedToken = TokenUtil.GenerateToken(
+                this._config.Jwt.Issuer,
+                this._config.Jwt.Issuer,
+                this._config.Jwt.ExpireMinutes,
+                model,
+                this._config.Jwt.TokenKey, SecurityAlgorithms.HmacSha256
+            );
+            var refreshToken = TokenUtil.GenerateRefreshToken(
+                this._config.Jwt.Issuer,
+                this._config.Jwt.Issuer,
+                generatedToken,
+                this._config.Jwt.RefreshTokenKey,
+                this._config.Jwt.ExpireRefhreshDays,
+                SecurityAlgorithms.HmacSha512
+            );
+
+            return new TokenResponse
+            {
+                Token = generatedToken,
+                Refresh = refreshToken
+            };
+        }
 
         /// <summary>
         ///     ユーザ情報を取得する
@@ -120,6 +161,29 @@ namespace FilunK.backenddotnet_trial.Controllers
             user.BirthDate = DateTime.Now;
 
             return user;
+        }
+
+        private UserModel ReAuthenticate(string refreshToken, out bool isValidated)
+        {
+
+            UserModel model;
+            try
+            {
+                // refreshTokenのデコード
+                model = TokenUtil.DecodeRefreshToken(refreshToken, this._config.Jwt.RefreshTokenKey, this._config.Jwt.TokenKey, this._config.Jwt.Issuer);
+
+                // TODO modelをもとにDBから情報を取得、再認証を行う。
+
+            }
+            catch
+            {
+                isValidated = false;
+                return null;
+
+            }
+
+            isValidated = true;
+            return model;
         }
 
         #endregion

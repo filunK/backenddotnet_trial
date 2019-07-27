@@ -34,6 +34,7 @@ namespace FilunK.backenddotnet_trial.Models.Configure
         public string Issuer { get; set; }
 
         public double ExpireMinutes { get; set; }
+        public double ExpireRefhreshDays { get; set; }
     }
 
     #endregion AppSettingの子クラス

@@ -46,7 +46,7 @@ namespace FilunK.backenddotnet_trial.Utils
         /// <summary>
         ///     リフレッシュトークンを生成する
         /// </summary>
-        public static string GenerateRefreshToken(string issuer, string audience, string jwt, string tokenString, string algorithm)
+        public static string GenerateRefreshToken(string issuer, string audience, string jwt, string tokenString, double expireDays, string algorithm)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenString));
             var credential = new SigningCredentials(key, algorithm);
@@ -57,13 +57,86 @@ namespace FilunK.backenddotnet_trial.Utils
                 claims: new[] {
                     new Claim("token", jwt),
                 },
+                expires: DateTime.Now.AddDays(expireDays),
                 signingCredentials: credential
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        /// <summary>
+        ///     リフレッシュトークンをデコードする
+        /// </summary>
+        public static UserModel DecodeRefreshToken(string refreshToken, string refreshTokenKeyString, string accessTokenKeyString, string issuer)
+        {
+
+            var refKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(refreshTokenKeyString));
+            var accKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(accessTokenKeyString));
+
+            var handler = new JwtSecurityTokenHandler();
+            var refreshTokenValidationParams = new TokenValidationParameters
+            {
+                ValidAudience = issuer,
+                ValidIssuer = issuer,
+                ValidateLifetime = true,
+                IssuerSigningKey = refKey
+            };
+
+            try
+            {
+                var claims = handler.ValidateToken(refreshToken, refreshTokenValidationParams, out var token);
+
+                var resolvedToken = (
+                    from claim in claims.Claims
+                    where claim.Type == "token"
+                    select claim
+                ).FirstOrDefault();
+
+                // refreshTokenに含まれていたAccessTokenを解析する。
+                var accessTokenValidationParams = new TokenValidationParameters
+                {
+                    ValidateAudience = false,
+                    ValidIssuer = issuer,
+                    ValidateLifetime = false,
+                    IssuerSigningKey = accKey
+                };
+
+                var resolvedClaim = handler.ValidateToken(resolvedToken.Value, accessTokenValidationParams, out var reresolvedToken);
+
+                // claimからUserModelを構築
+                var model = new UserModel();
+                foreach (var claim in resolvedClaim.Claims)
+                {
+                    switch (claim.Type)
+                    {
+                        case "username":
+                            model.UserName = claim.Value;
+                            break;
+                        case "mailaddress":
+                            model.MailAddress = claim.Value;
+                            break;
+                        case "birthday":
+                            if (DateTime.TryParse(claim.Value, out var convertedDatetime))
+                            {
+                                model.BirthDate = convertedDatetime;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                }
+
+                return model;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+
+        }
     }
-
-
 }
 
