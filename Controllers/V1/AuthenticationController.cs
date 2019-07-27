@@ -28,7 +28,7 @@ namespace FilunK.backenddotnet_trial.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly AppSettings _config ;
+        private readonly AppSettings _config;
 
         public AuthenticationController(IOptions<AppSettings> configuration)
         {
@@ -62,9 +62,22 @@ namespace FilunK.backenddotnet_trial.Controllers
             if (user != null)
             {
                 // JWT生成
-                var generatedToken = TokenUtil.GenerateToken(this._config.Jwt.Issuer, this._config.Jwt.Issuer, this._config.Jwt.ExpireMinutes, user, this._config.Jwt.TokenKey, SecurityAlgorithms.HmacSha256);
-                var refreshToken = TokenUtil.GenerateRefreshToken(this._config.Jwt.Issuer, this._config.Jwt.Issuer, generatedToken, this._config.Jwt.RefreshTokenKey, SecurityAlgorithms.HmacSha512);
-                response = Ok(new {
+                var generatedToken = TokenUtil.GenerateToken(
+                    this._config.Jwt.Issuer,
+                    this._config.Jwt.Issuer,
+                    this._config.Jwt.ExpireMinutes,
+                    user,
+                    this._config.Jwt.TokenKey, SecurityAlgorithms.HmacSha256
+                );
+                var refreshToken = TokenUtil.GenerateRefreshToken(
+                    this._config.Jwt.Issuer,
+                    this._config.Jwt.Issuer,
+                    generatedToken,
+                    this._config.Jwt.RefreshTokenKey,
+                    SecurityAlgorithms.HmacSha512
+                );
+                response = Ok(new
+                {
                     token = generatedToken,
                     refresh = refreshToken
                 });
@@ -98,7 +111,8 @@ namespace FilunK.backenddotnet_trial.Controllers
         /// </summary>
         private UserModel Authenticate(LoginModel login)
         {
-            UserModel user = new UserModel{
+            UserModel user = new UserModel
+            {
                 UserName = login.Username,
             };
 

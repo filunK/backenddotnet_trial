@@ -21,7 +21,7 @@ namespace FilunK.backenddotnet_trial.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private IConfiguration _config ;
+        private IConfiguration _config;
 
         public BookController(IConfiguration configuration)
         {

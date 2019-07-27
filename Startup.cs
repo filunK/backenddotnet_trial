@@ -21,7 +21,7 @@ namespace FilunK.backenddotnet_trial
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration,IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             this.Configuration = configuration;
         }
@@ -52,12 +52,12 @@ namespace FilunK.backenddotnet_trial
 
             services.AddCors(options =>
                 {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials()
-                .Build());
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                    .Build());
                 }
             );
 
@@ -73,7 +73,7 @@ namespace FilunK.backenddotnet_trial
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                IdentityModelEventSource.ShowPII = true; 
+                IdentityModelEventSource.ShowPII = true;
             }
             else
             {

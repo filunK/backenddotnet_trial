@@ -22,7 +22,7 @@ namespace FilunK.backenddotnet_trial.Utils
         /// <summary>
         ///     JWTを生成する
         /// </summary>
-        public static string GenerateToken(string issuer, string audience, double expires, UserModel user,string tokenString, string algorithm)
+        public static string GenerateToken(string issuer, string audience, double expires, UserModel user, string tokenString, string algorithm)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenString));
             var credential = new SigningCredentials(key, algorithm);

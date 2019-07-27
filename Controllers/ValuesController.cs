@@ -23,7 +23,8 @@ namespace FilunK.backenddotnet_trial.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
 
-            return new JsonResult(new{
+            return new JsonResult(new
+            {
                 Environment = this._env.EnvironmentName
             });
         }
