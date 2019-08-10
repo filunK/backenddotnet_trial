@@ -136,7 +136,7 @@ namespace FilunK.backenddotnet_trial.Controllers
                 this._config.Jwt.Issuer,
                 generatedToken,
                 this._config.Jwt.RefreshTokenKey,
-                this._config.Jwt.ExpireRefhreshDays,
+                this._config.Jwt.ExpireRefreshDays,
                 SecurityAlgorithms.HmacSha512
             );
 
