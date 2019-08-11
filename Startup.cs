@@ -14,8 +14,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Logging;
+using Npgsql.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 using FilunK.backenddotnet_trial.Models.Configure;
+using FilunK.backenddotnet_trial.DataAccess;
 
 namespace FilunK.backenddotnet_trial
 {
@@ -62,6 +65,8 @@ namespace FilunK.backenddotnet_trial
             );
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddEntityFrameworkNpgsql().AddDbContext<PgContext>().BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

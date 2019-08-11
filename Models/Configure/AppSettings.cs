@@ -11,6 +11,8 @@ namespace FilunK.backenddotnet_trial.Models.Configure
         public Logging Logging { get; set; }
         public Jwt Jwt { get; set; }
 
+        public ConnectionStrings ConnectionStrings { get; set; }
+
         public string AllowedHosts { get; set; }
     }
 
@@ -35,6 +37,11 @@ namespace FilunK.backenddotnet_trial.Models.Configure
 
         public double ExpireMinutes { get; set; }
         public double ExpireRefreshDays { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public string Postgres { get; set; }
     }
 
     #endregion AppSettingの子クラス
