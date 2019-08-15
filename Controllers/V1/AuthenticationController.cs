@@ -430,7 +430,7 @@ namespace FilunK.backenddotnet_trial.Controllers
         {
             // 未確認ユーザかつ、一時確認URLが期限切れとなっているデータを検索
             var currentTimestamp = DateTime.Now;
-            var queryResult =(
+            var queryResult =
                 from confirm in context.AccountConfirms
                 join users in context.Users
                     on confirm.UserId equals users.UserId
@@ -446,33 +446,31 @@ namespace FilunK.backenddotnet_trial.Controllers
                     ExpireLimit = confirm.ExpireLimit,
                     UtcExpireTick = System.TimeZoneInfo.ConvertTimeToUtc(confirm.ExpireLimit).Ticks,
                     NowTick = DateTime.Now.Ticks
-                }).ToList();
-
-            foreach (var item in queryResult)
-            {
-                var userData =
-                (
-                    from users in context.Users
-                    where users.UserId == item.UserId
-                    select users
-                ).FirstOrDefault();
-
-                var confirmData =
-                (
-                    from confirm in context.AccountConfirms
-                    where confirm.ConfirmUri == item.TempUri
-                    select confirm
-                ).FirstOrDefault();
-
-                if (userData != null && confirmData != null)
-                {
-                    context.Users.Remove(userData);
-                    context.AccountConfirms.Remove(confirmData);
-                }
-            }
+                };
 
             if (queryResult.Count() > 0)
             {
+                var targetUsers = 
+                (
+                    from users in context.Users
+                    join queried in queryResult
+                        on users.UserId equals queried.UserId
+                    select 
+                        users
+                ).ToArray();
+
+                var targetConfirms =
+                (
+                    from confirms in context.AccountConfirms
+                    join queried in queryResult
+                        on confirms.ConfirmUri equals queried.TempUri
+                    select
+                        confirms
+                ).ToArray();
+
+                context.Users.RemoveRange(targetUsers);
+                context.AccountConfirms.RemoveRange(targetConfirms);
+
                 context.SaveChanges();
             }
 
