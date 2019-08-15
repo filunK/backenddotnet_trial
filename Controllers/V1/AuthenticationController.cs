@@ -443,9 +443,6 @@ namespace FilunK.backenddotnet_trial.Controllers
                 {
                     UserId = users.UserId,
                     TempUri = confirm.ConfirmUri,
-                    ExpireLimit = confirm.ExpireLimit,
-                    UtcExpireTick = System.TimeZoneInfo.ConvertTimeToUtc(confirm.ExpireLimit).Ticks,
-                    NowTick = DateTime.Now.Ticks
                 };
 
             if (queryResult.Count() > 0)
