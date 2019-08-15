@@ -33,7 +33,6 @@ namespace FilunK.backenddotnet_trial.Utils
                 claims: new[] {
                     new Claim("username", user.UserName),
                     new Claim("mailaddress", user.MailAddress),
-                    new Claim("birthday", user.BirthDate.ToLongDateString()),
                 },
                 expires: DateTime.Now.AddMinutes(expires),
                 signingCredentials: credential
@@ -115,13 +114,6 @@ namespace FilunK.backenddotnet_trial.Utils
                         case "mailaddress":
                             model.MailAddress = claim.Value;
                             break;
-                        case "birthday":
-                            if (DateTime.TryParse(claim.Value, out var convertedDatetime))
-                            {
-                                model.BirthDate = convertedDatetime;
-                            }
-                            break;
-
                         default:
                             break;
                     }
