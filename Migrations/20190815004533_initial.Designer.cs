@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace backenddotnet_trial.Migrations
 {
     [DbContext(typeof(PgContext))]
-    [Migration("20190811080402_initial")]
+    [Migration("20190815004533_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,101 +25,107 @@ namespace backenddotnet_trial.Migrations
                 {
                     b.Property<string>("ConfirmUri")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("CONFIRM_URI")
+                        .HasColumnName("confirm_uri")
                         .HasMaxLength(40);
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnName("CREATION_DATE");
+                        .HasColumnName("creation_date");
 
                     b.Property<string>("CreationId")
                         .IsRequired()
-                        .HasColumnName("CREATION_ID")
+                        .HasColumnName("creation_id")
                         .HasMaxLength(30);
 
                     b.Property<string>("CreationProgram")
                         .IsRequired()
-                        .HasColumnName("CREATION_PG")
+                        .HasColumnName("creation_pg")
                         .HasMaxLength(30);
 
                     b.Property<DateTime>("ExpireLimit")
-                        .HasColumnName("EXPIRE_LIMIT");
+                        .HasColumnName("expire_limit");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnName("DEL_FLAG");
+                        .HasColumnName("del_flg");
 
                     b.Property<DateTime>("UpdateDate")
-                        .HasColumnName("UPDATE_DATE");
+                        .HasColumnName("update_date");
 
                     b.Property<string>("UpdateId")
                         .IsRequired()
-                        .HasColumnName("UPDATE_ID")
+                        .HasColumnName("update_id")
                         .HasMaxLength(30);
 
                     b.Property<string>("UpdateProgram")
                         .IsRequired()
-                        .HasColumnName("UPDATE_ID")
+                        .HasColumnName("update_pg")
                         .HasMaxLength(30);
 
                     b.Property<string>("UserId")
-                        .HasColumnName("USER_ID");
+                        .HasColumnName("user_id")
+                        .HasMaxLength(100);
 
                     b.HasKey("ConfirmUri");
 
-                    b.ToTable("WK_ACCOUNT_CONFIRM","BK_DOTNET");
+                    b.ToTable("wk_account_confirm","bk_dotnet");
                 });
 
             modelBuilder.Entity("FilunK.backenddotnet_trial.DataAccess.DataModel.User", b =>
                 {
                     b.Property<string>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("USER_ID");
+                        .HasColumnName("user_id")
+                        .HasMaxLength(100);
 
                     b.Property<DateTime>("CreationDate")
-                        .HasColumnName("CREATION_DATE");
+                        .HasColumnName("creation_date");
 
                     b.Property<string>("CreationId")
                         .IsRequired()
-                        .HasColumnName("CREATION_ID")
+                        .HasColumnName("creation_id")
                         .HasMaxLength(30);
 
                     b.Property<string>("CreationProgram")
                         .IsRequired()
-                        .HasColumnName("CREATION_PG")
+                        .HasColumnName("creation_pg")
                         .HasMaxLength(30);
 
                     b.Property<string>("Hash")
                         .IsRequired()
-                        .HasColumnName("HASH");
+                        .HasColumnName("hash");
 
                     b.Property<bool>("IsConfirmed")
-                        .HasColumnName("ACCOUNT_CONFIRMED");
+                        .HasColumnName("account_confirmed");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnName("DEL_FLAG");
+                        .HasColumnName("del_flg");
 
                     b.Property<int>("Iteration")
-                        .HasColumnName("ITERATION");
+                        .HasColumnName("iteration");
+
+                    b.Property<string>("MailAddress")
+                        .IsRequired()
+                        .HasColumnName("mail_address");
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasColumnName("SALT");
+                        .HasColumnName("salt");
 
                     b.Property<DateTime>("UpdateDate")
-                        .HasColumnName("UPDATE_DATE");
+                        .HasColumnName("update_date");
 
                     b.Property<string>("UpdateId")
                         .IsRequired()
-                        .HasColumnName("UPDATE_ID")
+                        .HasColumnName("update_id")
                         .HasMaxLength(30);
 
                     b.Property<string>("UpdateProgram")
                         .IsRequired()
-                        .HasColumnName("UPDATE_ID")
+                        .HasColumnName("update_pg")
                         .HasMaxLength(30);
 
                     b.HasKey("UserId");
 
-                    b.ToTable("T_USER","BK_DOTNET");
+                    b.ToTable("t_user","bk_dotnet");
                 });
 #pragma warning restore 612, 618
         }

@@ -38,6 +38,15 @@ namespace FilunK.backenddotnet_trial.Utils
 
         }
 
+    // byte[] saltBytes = GenerateSalt(saltSize);
+    
+    // // PBKDF2によるハッシュを生成
+    // byte[] hashBytes = GeneratePasswordHash("p@ssword", saltBytes, hashSize, iteration);
+    
+    // // Base64 文字列に変換
+    // string saltText = Convert.ToBase64String(saltBytes);
+    // string hashText = Convert.ToBase64String(hashBytes);
+
         /// <summary>
         /// 2段階認証のための一時URIを生成する
         /// </summary>
@@ -51,7 +60,7 @@ namespace FilunK.backenddotnet_trial.Utils
 
             for (int i = 0; i < LENGTH; i++)
             {
-                var position = r.Next(LENGTH);
+                var position = r.Next(CHARACTERS.Length);
                 builder.Append(CHARACTERS[position]);
                 
             }

@@ -6,36 +6,44 @@ namespace FilunK.backenddotnet_trial.DataAccess.DataModel
 {
     public class EntityBase
     {
-        [Column("CREATION_ID")]
+        [Column("creation_id")]
         [MaxLength(30)]
         [Required]
         public string CreationId{get;set;}
 
-        [Column("CREATION_PG")]
+        [Column("creation_pg")]
         [MaxLength(30)]
         [Required]
         public string CreationProgram{get;set;}
 
-        [Column("CREATION_DATE")]
+        [Column("creation_date")]
         [Required]
         public DateTime CreationDate{get;set;}
 
-        [Column("UPDATE_ID", Order=910003)]
+        [Column("update_id")]
         [MaxLength(30)]
         [Required]
         public string UpdateId{get;set;}
 
-        [Column("UPDATE_ID")]
+        [Column("update_pg")]
         [MaxLength(30)]
         [Required]
         public string UpdateProgram{get;set;}
 
-        [Column("UPDATE_DATE")]
+        [Column("update_date")]
         [Required]
         public DateTime UpdateDate{get;set;}
 
-        [Column("DEL_FLAG")]
+        [Column("del_flg")]
         [Required]
         public bool IsDeleted{get;set;}
+
+
+        public EntityBase()
+        {
+            this.CreationDate = DateTime.Now;
+            this.UpdateDate = DateTime.Now;
+            this.IsDeleted = false;
+        }
     }
 }

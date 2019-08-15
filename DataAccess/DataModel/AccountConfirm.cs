@@ -4,21 +4,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FilunK.backenddotnet_trial.DataAccess.DataModel
 {
-    [Table("WK_ACCOUNT_CONFIRM", Schema = "BK_DOTNET")]
+    [Table("wk_account_confirm", Schema = "bk_dotnet")]
     public class AccountConfirm : EntityBase
     {
         [Key]
         [MaxLength(40)]
-        [Column("CONFIRM_URI")]
+        [Column("confirm_uri")]
         public string ConfirmUri { get; set; }
 
-        [Range(8, 100)]
-        [Column("USER_ID")]
+        [MinLength(8)]
+        [MaxLength(100)]
+        [Column("user_id")]
         public string UserId { get; set; }
 
         [Required]
-        [Column("EXPIRE_LIMIT")]
+        [Column("expire_limit")]
         public DateTime ExpireLimit { get; set; }
+
+        public AccountConfirm(): base()
+        {
+            
+        }
     }
 
 }

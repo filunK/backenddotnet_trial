@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Proxies;
 using Npgsql.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace FilunK.backenddotnet_trial.DataAccess
         public PgContext(DbContextOptions<PgContext> option, IOptions<AppSettings> configuration) : base(option)
         {
             this._config = configuration.Value;
+            this.Database.SetCommandTimeout(60);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,5 +29,6 @@ namespace FilunK.backenddotnet_trial.DataAccess
             optionsBuilder.UseNpgsql(this._config.ConnectionStrings.Postgres);
             optionsBuilder.UseLazyLoadingProxies();
         }
+
     }
 }

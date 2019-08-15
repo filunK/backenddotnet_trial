@@ -8,7 +8,5 @@ namespace FilunK.backenddotnet_trial.Models
         public string UserName { get; set; }
 
         public string MailAddress { get; set; }
-
-        public DateTime BirthDate { get; set; }
     }
 }

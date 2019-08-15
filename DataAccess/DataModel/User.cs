@@ -4,28 +4,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FilunK.backenddotnet_trial.DataAccess.DataModel
 {
-    [Table("T_USER", Schema = "BK_DOTNET")]
+    [Table("t_user", Schema = "bk_dotnet")]
     public class User : EntityBase
     {
         [Key]
-        [Range(8, 100)]
-        [Column("USER_ID")]
+        [MinLength(8)]
+        [MaxLength(100)]
+        [Column("user_id")]
         public string UserId { get; set; }
 
         [Required]
-        [Column("SALT")]
+        [Column("mail_address")]
+        public string MailAddress { get; set; }
+
+        [Required]
+        [Column("salt")]
         public string Salt { get; set; }
 
         [Required]
-        [Column("HASH")]
+        [Column("hash")]
         public string Hash { get; set; }
 
         [Required]
-        [Column("ITERATION")]
+        [Column("iteration")]
         public int Iteration { get; set; }
 
         [Required]
-        [Column("ACCOUNT_CONFIRMED")]
+        [Column("account_confirmed")]
         public bool IsConfirmed { get; set; }
+
+        public User(): base()
+        {
+            
+        }
     }
 }
