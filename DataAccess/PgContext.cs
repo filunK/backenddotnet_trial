@@ -16,6 +16,8 @@ namespace FilunK.backenddotnet_trial.DataAccess
 
         public DbSet<AccountConfirm> AccountConfirms { get; set; }
 
+        public DbSet<Book> Books { get; set; }
+
         private readonly AppSettings _config;
 
         public PgContext(DbContextOptions<PgContext> option, IOptions<AppSettings> configuration) : base(option)
@@ -30,5 +32,10 @@ namespace FilunK.backenddotnet_trial.DataAccess
             optionsBuilder.UseLazyLoadingProxies();
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Book>()
+                .HasKey(c => new { c.UserId, c.Isbn });
+        }
     }
 }

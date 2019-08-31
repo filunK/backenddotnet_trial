@@ -64,6 +64,44 @@ namespace FilunK.backenddotnet_trial.Utils
         }
 
         /// <summary>
+        ///     アクセストークンをデコードする
+        /// </summary>
+        public static UserModel DecodeAccessToken(string token, string tokenKeyString, string issuer)
+        {
+            var accKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKeyString));
+            var handler = new JwtSecurityTokenHandler();
+            var accessTokenValidationParams = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidIssuer = issuer,
+                ValidateLifetime = false,
+                IssuerSigningKey = accKey
+            };
+
+            var resolvedClaim = handler.ValidateToken(token, accessTokenValidationParams, out var reresolvedToken);
+
+            // claimからUserModelを構築
+            var model = new UserModel();
+            foreach (var claim in resolvedClaim.Claims)
+            {
+                switch (claim.Type)
+                {
+                    case "username":
+                        model.UserName = claim.Value;
+                        break;
+                    case "mailaddress":
+                        model.MailAddress = claim.Value;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+            return model;
+        }
+
+        /// <summary>
         ///     リフレッシュトークンをデコードする
         /// </summary>
         public static UserModel DecodeRefreshToken(string refreshToken, string refreshTokenKeyString, string accessTokenKeyString, string issuer)
