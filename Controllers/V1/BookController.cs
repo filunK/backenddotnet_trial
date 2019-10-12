@@ -276,6 +276,7 @@ namespace FilunK.backenddotnet_trial.Controllers
         }
 
         [Authorize]
+        // [AllowAnonymous]
         [HttpGet]
         [Route("googleBook/{isbn}")]
         public async Task<IActionResult> SearchGoogleBooks(string isbn)
@@ -297,14 +298,15 @@ namespace FilunK.backenddotnet_trial.Controllers
 
             var contents = await googleResponse.Content.ReadAsAsync<GoogleBooksVolumesModel>();
 
-            if (contents.TotalItems > 0)
+            if (contents.Items.Count() > 0)
             {
                 // ISBN13が一致するものを抽出
                 var googleBook =
                 (
                     from items in contents.Items
                     where
-                    items.VolumeInfo.IndustryIdentifiers.Contains(
+                    items.VolumeInfo.IndustryIdentifiers != null
+                    && items.VolumeInfo.IndustryIdentifiers.Contains(
                         (
                             from identifier in items.VolumeInfo.IndustryIdentifiers
                             where identifier.Type == "ISBN_13" && identifier.Identifier == isbn
